@@ -28,11 +28,41 @@ jobs:
         run: |
           brew tap ${{ github.repository }}
           echo "Checking athas-editor for updates..."
-          if brew livecheck --cask athas-editor | grep -q "latest"; then
+          
+          # Get current version from cask
+          CURRENT_VERSION=$(brew info --cask athas-editor --json=v2 | jq -r '.casks[0].version')
+          echo "Current version: $CURRENT_VERSION"
+          
+          # Get latest version from GitHub
+          LATEST_VERSION=$(curl -s https://api.github.com/repos/athasdev/athas/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+          echo "Latest version: $LATEST_VERSION"
+          
+          if [ "$CURRENT_VERSION" = "$LATEST_VERSION" ]; then
             echo "athas-editor is up to date"
           else
-            echo "Update available for athas-editor"
-            brew bump-cask-pr --write-only --no-browse athas-editor || echo "Bump failed or no update needed"
+            echo "Update available for athas-editor: $CURRENT_VERSION -> $LATEST_VERSION"
+            
+            # Download and calculate sha256 for both architectures
+            AARCH64_URL="https://github.com/athasdev/athas/releases/download/v${LATEST_VERSION}/Athas_${LATEST_VERSION}_aarch64.dmg"
+            X64_URL="https://github.com/athasdev/athas/releases/download/v${LATEST_VERSION}/Athas_${LATEST_VERSION}_x64.dmg"
+            
+            echo "Downloading aarch64 version..."
+            curl -sL "$AARCH64_URL" -o /tmp/athas_aarch64.dmg
+            AARCH64_SHA256=$(shasum -a 256 /tmp/athas_aarch64.dmg | awk '{print $1}')
+            echo "aarch64 sha256: $AARCH64_SHA256"
+            
+            echo "Downloading x64 version..."
+            curl -sL "$X64_URL" -o /tmp/athas_x64.dmg
+            X64_SHA256=$(shasum -a 256 /tmp/athas_x64.dmg | awk '{print $1}')
+            echo "x64 sha256: $X64_SHA256"
+            
+            # Update the cask file
+            CASK_FILE="Casks/athas-editor.rb"
+            sed -i "s/version \".*\"/version \"$LATEST_VERSION\"/" "$CASK_FILE"
+            sed -i "s/sha256 arm:   \".*\",/sha256 arm:   \"$AARCH64_SHA256\",/" "$CASK_FILE"
+            sed -i "s/intel: \".*\"/intel: \"$X64_SHA256\"/" "$CASK_FILE"
+            
+            echo "Updated cask file"
           fi
           
       - name: Create Pull Request
