@@ -19,9 +19,10 @@ cask "athas-editor" do
   app "Athas.app"
 
   zap trash: [
-    "~/Library/Application Support/com.athas.dev",
-    "~/Library/Caches/com.athas.dev",
-    "~/Library/Preferences/com.athas.dev.plist",
-    "~/Library/Saved Application State/com.athas.dev.savedState",
+    "~/Library/Application Support/com.code.athas",
+    "~/Library/Caches/com.code.athas",
+    "~/Library/Logs/com.code.athas",
+    "~/Library/Preferences/com.code.athas.plist",
+    "~/Library/WebKit/com.code.athas",
   ]
 end
