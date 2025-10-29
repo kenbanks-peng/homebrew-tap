@@ -14,7 +14,7 @@ jobs:
       - name: Update outdated casks
         uses: dawidd6/action-homebrew-bump-formula@v5
         with:
-          token: ${{ secrets.GITHUB_ACTIONS_SECRET }}
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
           tap: kenbanks/homebrew-tap
           livecheck: true
           force: false
