@@ -15,6 +15,6 @@ jobs:
         uses: dawidd6/action-homebrew-bump-formula@v5
         with:
           token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
-          tap: kenbanks/homebrew-tap
+          tap: kenbanks-peng/homebrew-tap
           livecheck: true
           force: false
