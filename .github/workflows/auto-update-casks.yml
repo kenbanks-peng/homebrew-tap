@@ -1,0 +1,20 @@
+name: Auto-update Casks
+
+on:
+  # Check for updates daily at 2 AM UTC
+  schedule:
+    - cron: '0 2 * * *'
+  # Allow manual triggering
+  workflow_dispatch:
+
+jobs:
+  update-casks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update outdated casks
+        uses: dawidd6/action-homebrew-bump-formula@v5
+        with:
+          token: ${{ secrets.GITHUB_ACTIONS_SECRET }}
+          tap: kenbanks/homebrew-tap
+          livecheck: true
+          force: false
