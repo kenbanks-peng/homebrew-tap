@@ -26,11 +26,11 @@ jobs:
         env:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
         run: |
-          brew tap ${{ github.repository }}
           echo "Checking athas-editor for updates..."
           
-          # Get current version from cask
-          CURRENT_VERSION=$(brew info --cask athas-editor --json=v2 | jq -r '.casks[0].version')
+          # Get current version from cask file
+          CASK_FILE="Casks/athas-editor.rb"
+          CURRENT_VERSION=$(grep 'version' "$CASK_FILE" | head -1 | sed 's/.*version "\(.*\)".*/\1/')
           echo "Current version: $CURRENT_VERSION"
           
           # Get latest version from GitHub
@@ -56,13 +56,24 @@ jobs:
             X64_SHA256=$(shasum -a 256 /tmp/athas_x64.dmg | awk '{print $1}')
             echo "x64 sha256: $X64_SHA256"
             
-            # Update the cask file
-            CASK_FILE="Casks/athas-editor.rb"
-            sed -i "s/version \".*\"/version \"$LATEST_VERSION\"/" "$CASK_FILE"
-            sed -i "s/sha256 arm:   \".*\",/sha256 arm:   \"$AARCH64_SHA256\",/" "$CASK_FILE"
-            sed -i "s/intel: \".*\"/intel: \"$X64_SHA256\"/" "$CASK_FILE"
+            # Update the cask file - only modify version and sha256 lines
+            # Update version line
+            sed -i "s/^  version \".*\"/  version \"$LATEST_VERSION\"/" "$CASK_FILE"
             
-            echo "Updated cask file"
+            # Update sha256 lines - handle multi-line format
+            # First, find the line number of sha256, then replace the next 2 lines
+            awk -v arm_sha="$AARCH64_SHA256" -v intel_sha="$X64_SHA256" '
+            /^  sha256 arm:/ {
+              print "  sha256 arm:   \"" arm_sha "\","
+              getline
+              print "         intel: \"" intel_sha "\""
+              next
+            }
+            { print }
+            ' "$CASK_FILE" > "$CASK_FILE.tmp" && mv "$CASK_FILE.tmp" "$CASK_FILE"
+            
+            echo "Updated cask file with version $LATEST_VERSION"
+            cat "$CASK_FILE"
           fi
           
       - name: Create Pull Request
