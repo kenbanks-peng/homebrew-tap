@@ -6,21 +6,11 @@ This directory contains custom Homebrew formulas and casks.
 
 ```sh
 brew tap kenbanks-peng/tap
-brew install athas-editor
+brew install --cask font-monaspace-variable
 ```
 
 # Example Uninstall
 
-Uninstalls the App only.
-
 ```sh
-brew uninstall athas-editor
-```
-
-# Example Zap
-
-WARNING: zap option zill also uninstall any configuration and settings associated with the app, so that a new install starts completely fresh.  
-
-```sh
-brew uninstall --zap athas-editor
+brew uninstall --cask font-monaspace-variable
 ```
