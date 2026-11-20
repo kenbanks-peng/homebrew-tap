@@ -1,29 +1,29 @@
 class RexStatusline < Formula
   desc "Status line for Rex, rendered with Oh My Posh"
   homepage "https://github.com/kenbanks-peng/rex-statusline"
-  version "1.0.3"
+  version "1.0.4"
 
   depends_on "oh-my-posh"
 
   on_macos do
     on_arm do
       url "https://github.com/kenbanks-peng/rex-statusline/releases/download/v#{version}/rex-statusline-darwin-arm64.tar.gz"
-      sha256 "d1de97ce202dd41f5b0b25bb8fe2294cc94aefaa7b5217e9794cc0f46c4e6b73"
+      sha256 "e870d2cebc5335de48bb3236e7ec5a40cfb9201af0e1baad64d72c2930298dcc"
     end
     on_intel do
       url "https://github.com/kenbanks-peng/rex-statusline/releases/download/v#{version}/rex-statusline-darwin-amd64.tar.gz"
-      sha256 "7f0777c2de2c034e685b9c97fa40b74a884778d12e1140819e1953acba49a02d"
+      sha256 "4cec563f63e8f363372b97474b2772a5bc9dc1562ad89c60d65513a3a659851a"
     end
   end
 
   on_linux do
     on_arm do
       url "https://github.com/kenbanks-peng/rex-statusline/releases/download/v#{version}/rex-statusline-linux-arm64.tar.gz"
-      sha256 "788793de20889c20887590d9d156cb24c62c7d5fd217b6525011357a7388ecce"
+      sha256 "70de58f651c4b700e443bc57de2df55b1524393268c016f740f5a8964cacd7a2"
     end
     on_intel do
       url "https://github.com/kenbanks-peng/rex-statusline/releases/download/v#{version}/rex-statusline-linux-amd64.tar.gz"
-      sha256 "7daf4523ae6372156db15849840bfe56a4fbba15f5c7fe18d8dfa95d4fe542a2"
+      sha256 "ef160b89a812bf5c4a1d7ad84733721c7a54f9176202048574cc2d627d38caf1"
     end
   end
 
